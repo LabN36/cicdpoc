@@ -29,8 +29,16 @@ jobs:
         working-directory: ./android
         run: bundle install
 
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
       - name: JAVA Command
         run: which java
+
+      - name: JAVA Command
+        run: echo $JAVA_HOME
 
       - name: Pwd Command
         run: pwd
