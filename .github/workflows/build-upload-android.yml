@@ -31,7 +31,7 @@ jobs:
 
       - name: LS Command
         working-directory: ./android
-        run: ls
+        run: ls -la
 
       - name: Pwd Command
         run: pwd
