@@ -30,7 +30,7 @@ jobs:
         run: bundle install
 
       - name: JAVA Command
-        run: java --version
+        run: which java
 
       - name: Pwd Command
         run: pwd
