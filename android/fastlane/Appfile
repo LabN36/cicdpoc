@@ -1,0 +1,2 @@
+json_key_file("/Users/whoisrishabh/Downloads/cicdpoc-d9fe6-e2d436ba8707.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.themobitech.cicdpoc") # e.g. com.krausefx.app

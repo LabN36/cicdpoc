@@ -1,0 +1,54 @@
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    build_android_app(
+      task: "clean assemble",
+      build_type: "release",
+      print_command: true,
+      properties: {
+        "android.injected.version.code" => 6,
+        "android.injected.version.name" => "1.0.2",
+      }
+    )
+    # release = firebase_app_distribution(
+    #   app: "1:561779125994:android:844b58a3f389dca841f193",
+    #   # testers_file: "fastlane/testers_file.txt",
+    #   # release_notes_file: "fastlane/release_notes.txt",
+    #   service_credentials_file:	'/Users/whoisrishabh/Downloads/cicdpoc-firebaseadmin.json',
+    #   android_artifact_type: "APK",
+    #   # android_artifact_path: "../build/app/outputs/apk/#{env}/release/app-#{env}-release.apk",
+    #   android_artifact_path: "../build/app/outputs/apk/release/app-release.apk",
+    #   debug: true
+    # )
+
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    # gradle(task: "clean assembleRelease")
+    build_android_app(
+      task: "clean bundle",
+      # flavor: env,
+      build_type: "release",
+      print_command: true,
+    )
+    upload_to_play_store( 
+      package_name: "com.themobitech.cicdpoc",
+      track: 'internal',
+      # release_status: 'draft',
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_changelogs: true,
+      # version_code: 4,
+      # version_name: "1.0.2",
+      aab: "../build/app/outputs/bundle/release/app-release.aab"
+      )
+  end
+end
