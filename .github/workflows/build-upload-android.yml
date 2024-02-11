@@ -35,17 +35,20 @@ jobs:
           bundler-cache: true
 
       - name: Setup Fastlane
-        working-directory: ./android  # <-- Make sure you have this
+        working-directory: ./android
         run: bundle install
 
       - name: LS Command
+        working-directory: ./android
         run: ls
   
       - name: Run Fastlane
-        uses: maierj/fastlane-action@v3.0.0
-        with:
-            lane: 'beta'
-            subdirectory: android
+        working-directory: ./android
+        run: bundle exec fastlane beta
+        # uses: maierj/fastlane-action@v3.0.0
+        # with:
+        #     lane: 'beta'
+        #     subdirectory: android
     #   - name: Build the APK
     #     run: flutter build apk --release
     #   - name: Upload artifact to Github
