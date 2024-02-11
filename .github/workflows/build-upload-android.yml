@@ -14,8 +14,8 @@ jobs:
       - run: |
             echo ${{ secrets.KEYPROPERTIES }} > android/key.properties.asc
             echo ${{ secrets.STOREFILE }} > android/keystorefile.jks.asc
-            g -d --passphrase ${{ secrets.PASSPHRASE }} --batch android/key.properties.asc > android/key.properties
-            g -d --passphrase ${{ secrets.PASSPHRASE }} --batch android/keystorefile.jks.asc > android/keystorefile.jks
+            gpd -d --passphrase ${{ secrets.PASSPHRASE }} --batch android/key.properties.asc > android/key.properties
+            gpd -d --passphrase ${{ secrets.PASSPHRASE }} --batch android/keystorefile.jks.asc > android/keystorefile.jks
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
