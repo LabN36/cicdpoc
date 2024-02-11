@@ -9,7 +9,6 @@ platform :android do
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     build_android_app(
-      project_dir: 'android/',
       task: "clean assemble",
       build_type: "release",
       print_command: true,
