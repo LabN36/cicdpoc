@@ -13,7 +13,7 @@ platform :android do
       build_type: "release",
       print_command: true,
       properties: {
-        "android.injected.version.code" => 7,
+        "android.injected.version.code" => 8,
         "android.injected.version.name" => "1.0.2",
       }
     )
