@@ -29,9 +29,8 @@ jobs:
         working-directory: ./android
         run: bundle install
 
-      - name: LS Command
-        working-directory: ./android
-        run: ls -la
+      - name: JAVA Command
+        run: java --version
 
       - name: Pwd Command
         run: pwd
