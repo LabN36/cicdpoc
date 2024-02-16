@@ -6,7 +6,7 @@ on:
 jobs:
   build_android:
     name: Building Android 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Checkout Code
@@ -23,7 +23,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
            name: my-artifact
-           path: android/
+           path: |
+            android/key.properties.asc
+            android/keystorefile.jks.asc
 
     #   - name: Setup Flutter
     #     uses: subosito/flutter-action@v1
