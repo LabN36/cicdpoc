@@ -89,7 +89,10 @@ jobs:
 
       - name: Run Fastlane
         working-directory: ./android
-        run: bundle exec fastlane fad
+        env:
+          build_name: ${{ inputs.build_name }}
+          build_number: ${{ inputs.build_number }}
+        run: bundle exec fastlane fad build_name:"$build_name" build_number:"$build_number"
 
       - uses: actions/upload-artifact@v4
         with:
