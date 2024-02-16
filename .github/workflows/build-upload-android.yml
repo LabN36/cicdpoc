@@ -13,8 +13,8 @@ jobs:
         id: flutterCache
         uses: actions/cache@v3
         with:
-          path: ~/
-          key: ${{ runner.OS }}-fllutter-cache
+          path: /opt/
+          key: ${{ runner.OS }}-fllutter-cache-1
           # restore-keys: |
           #   ${{ runner.OS }}-flutter-cache
       
