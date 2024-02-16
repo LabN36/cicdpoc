@@ -7,26 +7,35 @@ platform :android do
   end
 
   desc "Submit a new Android Build to FAD"
-  lane :fad do
+  lane :fad do |options|
+    if options[:build_name]
+      build_name = options[:build_name]
+      puts "Selected build_name = #{build_name}"
+    end
+    if options[:build_number]
+      build_number = options[:build_number]
+      puts "Selected build_number = #{build_number}"
+    end
+
     build_android_app(
       task: "clean assemble",
       build_type: "release",
       print_command: true,
       properties: {
-        "android.injected.version.code" => 8,
-        "android.injected.version.name" => "1.0.2",
+        "android.injected.version.code" => "#{build_number}",
+        "android.injected.version.name" => "#{build_name}",
       }
     )
-    # release = firebase_app_distribution(
-    #   app: "1:561779125994:android:844b58a3f389dca841f193",
-    #   # testers_file: "fastlane/testers_file.txt",
-    #   # release_notes_file: "fastlane/release_notes.txt",
-    #   service_credentials_file:	'../android/firebaseadmin.json',
-    #   android_artifact_type: "APK",
-    #   # android_artifact_path: "../build/app/outputs/apk/#{env}/release/app-#{env}-release.apk",
-    #   android_artifact_path: "../build/app/outputs/apk/release/app-release.apk",
-    #   debug: true
-    # )
+    release = firebase_app_distribution(
+      app: "1:561779125994:android:844b58a3f389dca841f193",
+      # testers_file: "fastlane/testers_file.txt",
+      # release_notes_file: "fastlane/release_notes.txt",
+      service_credentials_file:	'../android/firebaseadmin.json',
+      android_artifact_type: "APK",
+      # android_artifact_path: "../build/app/outputs/apk/#{env}/release/app-#{env}-release.apk",
+      android_artifact_path: "../build/app/outputs/apk/release/app-release.apk",
+      debug: true
+    )
 
   end
 

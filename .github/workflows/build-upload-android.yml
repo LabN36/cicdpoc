@@ -1,8 +1,26 @@
 name: FAD deployment
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      build_name:
+        type: string
+        description: Build Name
+        required: true
+      build_number:
+        type: number
+        description: Build Number
+        required: true
+      choice:
+        type: choice
+        description: Build Type
+        options:
+        - release
+        - debug
+        - profile
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+
 jobs:
   build_android:
     name: Building Android 
