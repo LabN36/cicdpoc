@@ -9,18 +9,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Cache Flutter
+        id: flutterCache
+        uses: actions/cache@v3
+        with:
+          path: ~/
+          key: ${{ runner.OS }}-fllutter-cache
+          # restore-keys: |
+          #   ${{ runner.OS }}-flutter-cache
+      
+
+
       - name: Setup Flutter
+        if: steps.flutterCache.outputs.cache-hit != 'true'
         uses: subosito/flutter-action@v1
         with:
           flutter-version: 3.7.12
         
       - name: Setup Ruby
+        if: steps.flutterCache.outputs.cache-hit != 'true'
         uses: ruby/setup-ruby@v1
         with:
             ruby-version: '3.0'
             bundler-cache: true
 
       - name: Setup Java
+        if: steps.flutterCache.outputs.cache-hit != 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
@@ -28,6 +42,8 @@ jobs:
       - name: Check JAVA Version
         run: |
             which java
+            which flutter
+            which ruby
             echo $JAVA_HOME
 
       - uses: actions/checkout@v3
