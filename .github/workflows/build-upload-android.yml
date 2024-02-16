@@ -37,15 +37,14 @@ jobs:
         if: steps.flutterCache.outputs.cache-hit != 'true'
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+            java-version: 11
     
-      - name: Check JAVA Version
-        run: |
-            which java
-            which flutter
-            which ruby
-            which fastlane
-            echo $JAVA_HOME
+      # - name: Check JAVA Version
+      #   run: |
+      #       which java
+      #       which flutter
+      #       which ruby
+      #       echo $JAVA_HOME
 
       - uses: actions/checkout@v3
       - name: Checkout Source Code
