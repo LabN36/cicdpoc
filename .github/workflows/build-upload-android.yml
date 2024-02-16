@@ -21,57 +21,47 @@ jobs:
          ls -la android
          gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
          gpg -d --passphrase $PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
+         export PP=$PASSPHRASE
+         echo $PP
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v1
-        with:
-          flutter-version: 3.7.12
+      # - name: Setup Flutter
+      #   uses: subosito/flutter-action@v1
+      #   with:
+      #     flutter-version: 3.7.12
         
-      - name: Run Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-            ruby-version: '3.0'
-            bundler-cache: true
+      # - name: Run Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #       ruby-version: '3.0'
+      #       bundler-cache: true
   
-      - name: Install Flutter dependencies
-        run: flutter pub get
+      # - name: Install Flutter dependencies
+      #   run: flutter pub get
 
-      - name: Setup Fastlane
-        working-directory: ./android
-        run: bundle install
+      # - name: Setup Fastlane
+      #   working-directory: ./android
+      #   run: bundle install
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
+      # - name: Setup Java
+      #   uses: actions/setup-java@v1
+      #   with:
+      #     java-version: 11
 
-      - name: JAVA Command
-        run: which java
+      # - name: JAVA Command
+      #   run: which java
 
-      - name: JAVA Command
-        run: echo $JAVA_HOME
+      # - name: JAVA Command
+      #   run: echo $JAVA_HOME
 
-      - name: Pwd Command
-        run: ls -la android
+      # - name: Pwd Command
+      #   run: ls -la android
   
-      - name: Run Fastlane
-        working-directory: ./android
-        run: bundle exec fastlane beta
-        # uses: maierj/fastlane-action@v3.0.0
-        # with:
-        #     lane: 'beta'
-        #     subdirectory: android
-      - uses: actions/upload-artifact@v4
-        with:
-           name: apk-file
-           path: |
-            build/app/outputs/apk/
-            build/app/outputs/flutter-apk/
-
-        #   - name: Build the APK
-    #     run: flutter build apk --release
-    #   - name: Upload artifact to Github
-    #     uses: actions/upload-artifact@v1
-    #     with:
-    #       name: release-apk
-    #       path: build/app/outputs/apk/release/app-release.apk
+      # - name: Run Fastlane
+      #   working-directory: ./android
+      #   run: bundle exec fastlane beta
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #      name: apk-file
+      #      path: |
+      #       build/app/outputs/apk/
+      #       build/app/outputs/flutter-apk/
