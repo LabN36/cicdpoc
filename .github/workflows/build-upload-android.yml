@@ -7,7 +7,7 @@ on:
         description: Build Name
         required: true
       build_number:
-        type: number
+        type: string
         description: Build Number
         required: true
       choice:
