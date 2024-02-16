@@ -14,54 +14,50 @@ jobs:
           KEYPROPERTIES: ${{ secrets.KEYPROPERTIES }}
           STOREFILE: ${{ secrets.STOREFILE }}
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
+          SERVICECREDENTIALFILE: ${{ secrets.SERVICECREDENTIALFILE }}
         run: |
          gpg --version
          echo "$KEYPROPERTIES" > android/key.properties.asc
          echo "$STOREFILE" > android/keystorefile.jks.asc
+         echo "$SERVICECREDENTIALFILE" > android/firebaseadmin.json.asc
          ls -la android
          gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
          gpg -d --passphrase $PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
-         export PP=$PASSPHRASE
-         echo $PP
+         gpg -d --passphrase $PASSPHRASE --batch android/firebaseadmin.json.asc > android/firebaseadmin.json
 
-      # - name: Setup Flutter
-      #   uses: subosito/flutter-action@v1
-      #   with:
-      #     flutter-version: 3.7.12
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: 3.7.12
         
-      # - name: Run Ruby
-      #   uses: ruby/setup-ruby@v1
-      #   with:
-      #       ruby-version: '3.0'
-      #       bundler-cache: true
+      - name: Run Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: '3.0'
+            bundler-cache: true
   
-      # - name: Install Flutter dependencies
-      #   run: flutter pub get
+      - name: Install Flutter dependencies
+        run: flutter pub get
 
-      # - name: Setup Fastlane
-      #   working-directory: ./android
-      #   run: bundle install
+      - name: Setup Fastlane
+        working-directory: ./android
+        run: bundle install
 
-      # - name: Setup Java
-      #   uses: actions/setup-java@v1
-      #   with:
-      #     java-version: 11
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
 
-      # - name: JAVA Command
-      #   run: which java
-
-      # - name: JAVA Command
-      #   run: echo $JAVA_HOME
-
-      # - name: Pwd Command
-      #   run: ls -la android
+      - name: JAVA Command
+        run: |
+          which java
+          echo $JAVA_HOME
   
-      # - name: Run Fastlane
-      #   working-directory: ./android
-      #   run: bundle exec fastlane beta
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #      name: apk-file
-      #      path: |
-      #       build/app/outputs/apk/
-      #       build/app/outputs/flutter-apk/
+      - name: Run Fastlane
+        working-directory: ./android
+        run: bundle exec fastlane android
+      - uses: actions/upload-artifact@v4
+        with:
+           name: apk-file
+           path: |
+            build/app/outputs/apk/
