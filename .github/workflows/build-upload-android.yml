@@ -61,7 +61,14 @@ jobs:
         # with:
         #     lane: 'beta'
         #     subdirectory: android
-    #   - name: Build the APK
+      - uses: actions/upload-artifact@v4
+        with:
+           name: apk-file
+           path: |
+            build/app/outputs/apk/
+            build/app/outputs/flutter-apk/
+
+        #   - name: Build the APK
     #     run: flutter build apk --release
     #   - name: Upload artifact to Github
     #     uses: actions/upload-artifact@v1
