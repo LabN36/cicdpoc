@@ -44,6 +44,7 @@ jobs:
             which java
             which flutter
             which ruby
+            which fastlane
             echo $JAVA_HOME
 
       - uses: actions/checkout@v3
