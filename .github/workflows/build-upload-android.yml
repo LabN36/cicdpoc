@@ -15,11 +15,14 @@ jobs:
         env:
           KEYPROPERTIES: ${{ secrets.KEYPROPERTIES }}
           STOREFILE: ${{ secrets.STOREFILE }}
+          PASSPHRASE: ${{ secrets.PASSPHRASE }}
           
       - run: |
             gpg --version
             echo $KEYPROPERTIES > android/key.properties.asc
             echo $STOREFILE > android/keystorefile.jks.asc
+            gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
+            gpg -d --passphrase $PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
             ls -la android
 
 
