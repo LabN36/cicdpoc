@@ -8,14 +8,20 @@ jobs:
     name: Building Android 
     runs-on: macOS-12
     steps:
+      # - name: Set Environment Variables
+  
       - name: Checkout code
         uses: actions/checkout@v3
-        
+        env:
+          KEYPROPERTIES: ${{ secrets.KEYPROPERTIES }}
+          STOREFILE: ${{ secrets.STOREFILE }}
+          
       - run: |
             gpg --version
-            echo ${{ secrets.KEYPROPERTIES }} > android/key.properties.asc
-            echo ${{ secrets.STOREFILE }} > android/keystorefile.jks.asc
+            echo $KEYPROPERTIES > android/key.properties.asc
+            echo $STOREFILE > android/keystorefile.jks.asc
             ls -la android
+
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
