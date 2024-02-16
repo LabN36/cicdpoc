@@ -10,16 +10,20 @@ on:
         type: string
         description: Build Number
         required: true
-      choice:
+      build_type:
         type: choice
         description: Build Type
         options:
         - release
         - debug
-        - profile
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
+      fad_upload:
+        description: 'Uploat to FAD'
+        required: false
+        type: boolean
+      artifact_upload:
+        description: 'Uploat to Artifact'
+        required: false
+        type: boolean
 
 jobs:
   build_android:
@@ -92,10 +96,13 @@ jobs:
         env:
           build_name: ${{ inputs.build_name }}
           build_number: ${{ inputs.build_number }}
-        run: bundle exec fastlane fad build_name:"$build_name" build_number:"$build_number"
+          build_type: ${{ inputs.build_type }}
+          fad_upload: ${{ inputs.fad_upload }}
+        run: bundle exec fastlane fad build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"${{ inputs.fad_upload }}"
 
       - uses: actions/upload-artifact@v4
+        if: ${{ inputs.artifact_upload }}
         with:
-           name: $ARTIFACT_NAME
+           name: android-build
            path: |
             build/app/outputs/apk/

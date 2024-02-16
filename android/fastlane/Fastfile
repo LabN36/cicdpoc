@@ -16,26 +16,32 @@ platform :android do
       build_number = options[:build_number]
       puts "Selected build_number = #{build_number}"
     end
-
+    if options[:build_type]
+      build_type = options[:build_type]
+      puts "Selected build_type = #{build_type}"
+    end
+      fad_upload = options[:fad_upload]
+      puts "Selected fad_upload = #{fad_upload}"
     build_android_app(
       task: "clean assemble",
-      build_type: "release",
+      build_type: "#{build_type}",
       print_command: true,
       properties: {
         "android.injected.version.code" => "#{build_number}",
         "android.injected.version.name" => "#{build_name}",
       }
     )
-    release = firebase_app_distribution(
-      app: "1:561779125994:android:844b58a3f389dca841f193",
-      # testers_file: "fastlane/testers_file.txt",
-      # release_notes_file: "fastlane/release_notes.txt",
-      service_credentials_file:	'../android/firebaseadmin.json',
-      android_artifact_type: "APK",
-      # android_artifact_path: "../build/app/outputs/apk/#{env}/release/app-#{env}-release.apk",
-      android_artifact_path: "../build/app/outputs/apk/release/app-release.apk",
-      debug: true
-    )
+    if(fad_upload)
+      firebase_app_distribution(
+        app: "1:561779125994:android:844b58a3f389dca841f193",
+        # testers_file: "fastlane/testers_file.txt",
+        # release_notes_file: "fastlane/release_notes.txt",
+        service_credentials_file:	'../android/firebaseadmin.json',
+        android_artifact_type: "APK",
+        android_artifact_path: "../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk",
+        debug: true
+      )
+    end
 
   end
 
