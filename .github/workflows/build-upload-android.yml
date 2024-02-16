@@ -16,7 +16,7 @@ jobs:
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
         run: |
          gpg --version
-         echo $KEYPROPERTIES > android/key.properties.asc
+         echo "$KEYPROPERTIES" > android/key.properties.asc
          echo $STOREFILE > android/keystorefile.jks.asc
          ls -la android
 
