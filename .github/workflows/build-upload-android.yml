@@ -38,7 +38,7 @@ jobs:
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
           SERVICECREDENTIALFILE: ${{ secrets.SERVICECREDENTIALFILE }}
         run: |
-          gpg --version
+          export ARTIFACT_NAME="android-file-$(date +'%Y-%m-%dT-%H-%M')"
           echo "$KEYPROPERTIES" > android/key.properties.asc
           echo "$STOREFILE" > android/keystorefile.jks.asc
           echo "$SERVICECREDENTIALFILE" > android/firebaseadmin.json.asc
@@ -59,6 +59,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-           name: apk-file$(date +'%Y-%m-%dT-%H-%M')
+           name: $ARTIFACT_NAME
            path: |
             build/app/outputs/apk/
