@@ -1,69 +1,78 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
+  desc 'Runs all the tests'
   lane :test do
-    gradle(task: "test")
+    gradle(task: 'test')
   end
 
-  desc "Submit a new Android Build to FAD"
+  desc 'Submit a new Android Build to FAD'
   lane :fad do |options|
+    flavor = options[:flavor]
+    puts 'Selected flavor = #{flavor}'
+
     if options[:build_name]
       build_name = options[:build_name]
-      puts "Selected build_name = #{build_name}"
+      puts 'Selected build_name = #{build_name}'
     end
     if options[:build_number]
       build_number = options[:build_number]
-      puts "Selected build_number = #{build_number}"
+      puts 'Selected build_number = #{build_number}'
     end
     if options[:build_type]
       build_type = options[:build_type]
-      puts "Selected build_type = #{build_type}"
+      puts 'Selected build_type = #{build_type}'
     end
-      fad_upload = options[:fad_upload]
-      puts "Selected fad_upload = #{fad_upload}"
+    fad_upload = options[:fad_upload]
+    puts 'Selected fad_upload = #{fad_upload}'
+
+    playstore_upload = options[:playstore_upload]
+    puts 'Selected playstore_upload = #{playstore_upload}'
+
     build_android_app(
-      task: "clean assemble",
-      build_type: "#{build_type}",
+      task: 'clean assemble',
+      build_type: '#{build_type}',
       print_command: true,
       properties: {
-        "android.injected.version.code" => "#{build_number}",
-        "android.injected.version.name" => "#{build_name}",
+        'android.injected.version.code' => '#{build_number}',
+        'android.injected.version.name' => '#{build_name}',
       }
     )
     if(fad_upload)
       firebase_app_distribution(
-        app: "1:561779125994:android:844b58a3f389dca841f193",
-        # testers_file: "fastlane/testers_file.txt",
-        # release_notes_file: "fastlane/release_notes.txt",
+        app: '1:561779125994:android:844b58a3f389dca841f193',
+        # testers_file: 'fastlane/testers_file.txt',
+        # release_notes_file: 'fastlane/release_notes.txt',
         service_credentials_file:	'../android/firebaseadmin.json',
-        android_artifact_type: "APK",
-        android_artifact_path: "../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk",
+        android_artifact_type: 'APK',
+        android_artifact_path: '../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk',
         debug: true
       )
     end
-
   end
 
-  desc "Deploy a new version to the Google Play"
+  desc 'Deploy a new version to the Google Play'
   lane :deploy do
-    # gradle(task: "clean assembleRelease")
     build_android_app(
-      task: "clean bundle",
+      task: 'clean bundle',
       # flavor: env,
-      build_type: "release",
+      build_type: 'release',
+      properties: {
+        'android.injected.version.code' => '9',
+        'android.injected.version.name' => '1.0.2-qa',
+      },
       print_command: true,
     )
-    upload_to_play_store( 
-      package_name: "com.themobitech.cicdpoc",
+    upload_to_play_store(
+      package_name: 'com.themobitech.cicdpoc',
       track: 'internal',
-      # release_status: 'draft',
+      release_status: 'draft',
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_changelogs: true,
-      # version_code: 4,
-      # version_name: "1.0.2",
-      aab: "../build/app/outputs/bundle/release/app-release.aab"
+        #  '../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key: './playserviceaccount.json',
       )
   end
 end

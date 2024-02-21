@@ -1,14 +1,21 @@
-name: FAD deployment
+name: Android Deployment
 on:
   workflow_dispatch:
     inputs:
+      flavor:
+        type: choice
+        description: Build Type
+        options:
+        - stagging
+        - preprod
+        - prod
       build_name:
         type: string
-        description: Build Name
+        description: Build Name(name of the build like 1.0.0, 1.0.1, if you are QA write like 1.0.0-QA for tracking purpose)
         required: true
       build_number:
         type: string
-        description: Build Number
+        description: Build Number(a number like 1,2,3)
         required: true
       build_type:
         type: choice
@@ -17,11 +24,15 @@ on:
         - release
         - debug
       fad_upload:
-        description: 'Uploat to FAD'
+        description: 'Upload to FAD'
+        required: false
+        type: boolean
+      playstore_upload:
+        description: 'Upload to Play Store(only for release builds)'
         required: false
         type: boolean
       artifact_upload:
-        description: 'Uploat to Artifact'
+        description: 'Upload to Artifact'
         required: false
         type: boolean
 
@@ -75,14 +86,17 @@ jobs:
           STOREFILE: ${{ secrets.STOREFILE }}
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
           SERVICECREDENTIALFILE: ${{ secrets.SERVICECREDENTIALFILE }}
+          PLAYSERVICEFILE: ${{ secrets.PLAYSERVICEFILE }}
         run: |
           export ARTIFACT_NAME="android-file-$(date +'%Y-%m-%dT-%H-%M')"
           echo "$KEYPROPERTIES" > android/key.properties.asc
           echo "$STOREFILE" > android/keystorefile.jks.asc
           echo "$SERVICECREDENTIALFILE" > android/firebaseadmin.json.asc
+          echo "$PLAYSERVICEFILE" > android/playserviceaccount.json.asc
           gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
           gpg -d --passphrase $PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
           gpg -d --passphrase $PASSPHRASE --batch android/firebaseadmin.json.asc > android/firebaseadmin.json
+          gpg -d --passphrase $PASSPHRASE --batch android/playserviceaccount.json.asc > android/playserviceaccount.json
 
       - name: Install Flutter dependencies
         run: flutter pub get
@@ -94,11 +108,13 @@ jobs:
       - name: Run Fastlane
         working-directory: ./android
         env:
+          flavor: ${{ inputs.flavor }}
           build_name: ${{ inputs.build_name }}
           build_number: ${{ inputs.build_number }}
           build_type: ${{ inputs.build_type }}
           fad_upload: ${{ inputs.fad_upload }}
-        run: bundle exec fastlane fad build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"${{ inputs.fad_upload }}"
+          playstore_upload: ${{ inputs.playstore_upload }}
+        run: bundle exec fastlane fad flavor:"$flavor" build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"$fad_upload" playstore_upload:"$playstore_upload"
 
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.artifact_upload }}
