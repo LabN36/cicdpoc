@@ -58,9 +58,22 @@ jobs:
 
           ls -la ios
 
-          CERTIFICATE_PATH2=`pwd`/IOS_DISTRIBUTION_CERTIFICATE.p12
-          echo "$CERTIFICATE_PATH2"
-          
+          CERTIFICATE_PATH=`pwd`/ios/IOS_DISTRIBUTION_CERTIFICATE.p12
+          PP_PATH=`pwd`/ios/build_pp.mobileprovision
+          KEYCHAIN_PATH=`pwd`/ios/app-signing.keychain-db
+
+          echo "$CERTIFICATE_PATH"
+
+          security create-keychain -p "$IOS_ENCRYION_PASSPHRASE" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$IOS_ENCRYION_PASSPHRASE" $KEYCHAIN_PATH
+
+          security import $CERTIFICATE_PATH -P "$IOS_ENCRYION_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles          
 
       - name: Install Flutter dependencies
         run: flutter pub get
