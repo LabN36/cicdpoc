@@ -85,6 +85,7 @@ jobs:
           echo "$EXPORT_OPTION"
           pwd
           ls -la
+          cat /Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
           flutter build ipa -v --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
 
     #   - name: Run Fastlane
