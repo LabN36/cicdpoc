@@ -11,7 +11,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.themobitech.cicdpoc</key>
-		<string>cicd_poc_distribution</string>
+		<string>95252f3b-6f5c-4b16-a0f2-598114e6810d</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>2550FE3C2D5D0310BD462B074B7E25E82F60048D</string>
