@@ -61,6 +61,8 @@ jobs:
           PP_PATH=`pwd`/ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
           KEYCHAIN_PATH=`pwd`/ios/app-signing.keychain-db
 
+          echo "$CERTIFICATE_PATH"
+
           security create-keychain -p "$IOS_ENCRYION_PASSPHRASE" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$IOS_ENCRYION_PASSPHRASE" $KEYCHAIN_PATH
@@ -81,7 +83,7 @@ jobs:
         run: |
           EXPORT_OPTION=`pwd`/exportOptions.plist
           echo "$EXPORT_OPTION"
-          flutter build ipa -v --export-options-plist="$EXPORT_OPTION"
+          flutter build ipa -v --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
 
     #   - name: Run Fastlane
     #     working-directory: ./android
