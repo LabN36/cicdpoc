@@ -41,33 +41,32 @@ jobs:
     
       - name: Check xcodebuild Version
         run: |
+            which xcodebuild
             xcodebuild -version
 
-    #   - uses: actions/checkout@v3
-    #   - name: Checkout Source Code
-    #     env:
-    #       KEYPROPERTIES: ${{ secrets.KEYPROPERTIES }}
-    #       STOREFILE: ${{ secrets.STOREFILE }}
-    #       PASSPHRASE: ${{ secrets.PASSPHRASE }}
-    #       SERVICECREDENTIALFILE: ${{ secrets.SERVICECREDENTIALFILE }}
-    #       PLAYSERVICEFILE: ${{ secrets.PLAYSERVICEFILE }}
-    #     run: |
-    #       export ARTIFACT_NAME="android-file-$(date +'%Y-%m-%dT-%H-%M')"
-    #       echo "$KEYPROPERTIES" > android/key.properties.asc
-    #       echo "$STOREFILE" > android/keystorefile.jks.asc
-    #       echo "$SERVICECREDENTIALFILE" > android/firebaseadmin.json.asc
-    #       echo "$PLAYSERVICEFILE" > android/playserviceaccount.json.asc
-    #       gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
-    #       gpg -d --passphrase $PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
-    #       gpg -d --passphrase $PASSPHRASE --batch android/firebaseadmin.json.asc > android/firebaseadmin.json
-    #       gpg -d --passphrase $PASSPHRASE --batch android/playserviceaccount.json.asc > android/playserviceaccount.json
+      - uses: actions/checkout@v3
+      - name: Checkout Source Code
+        # run: |
+        #     ls
+        #     pwd $RUNNER_TEMP
+        env:
+          IOS_DISTRIBUTION_CERTIFICATE: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE }}
+          IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION: ${{ secrets.IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION }}
+          IOS_ENCRYION_PASSPHRASE: ${{ secrets.IOS_ENCRYION_PASSPHRASE }}
+        run: |
+          ls
+          pwd $RUNNER_TEMP
+          echo "$IOS_DISTRIBUTION_CERTIFICATE" > ios/IOS_DISTRIBUTION_CERTIFICATE.asc
+          echo "$IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION" > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc
+          gpg -d --passphrase $IOS_ENCRYION_PASSPHRASE --batch ios/IOS_DISTRIBUTION_CERTIFICATE.asc > ios/IOS_DISTRIBUTION_CERTIFICATE.p12
+          gpg -d --passphrase $IOS_ENCRYION_PASSPHRASE --batch ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
 
-    #   - name: Install Flutter dependencies
-    #     run: flutter pub get
+      - name: Install Flutter dependencies
+        run: flutter pub get
 
-    #   - name: Setup Fastlane
-    #     working-directory: ./android
-    #     run: bundle install
+      - name: Build IPA
+        working-directory: ./ios
+        run: flutter build ipa -v
 
     #   - name: Run Fastlane
     #     working-directory: ./android
