@@ -86,7 +86,7 @@ jobs:
           pwd
           ls -la
           cat /Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
-          flutter build ipa -v --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
+          flutter build ipa --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
 
     #   - name: Run Fastlane
     #     working-directory: ./android
