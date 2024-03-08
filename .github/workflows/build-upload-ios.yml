@@ -46,17 +46,11 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Checkout Source Code
-        # run: |
-        #     ls
-        #     pwd $RUNNER_TEMP
         env:
           IOS_DISTRIBUTION_CERTIFICATE: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE }}
           IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION: ${{ secrets.IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION }}
           IOS_ENCRYION_PASSPHRASE: ${{ secrets.IOS_ENCRYION_PASSPHRASE }}
         run: |
-          pwd 
-          echo $pwd
-          echo "Hi"
           echo "$IOS_DISTRIBUTION_CERTIFICATE" > ios/IOS_DISTRIBUTION_CERTIFICATE.asc
           echo "$IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION" > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc
           gpg -d --passphrase $IOS_ENCRYION_PASSPHRASE --batch ios/IOS_DISTRIBUTION_CERTIFICATE.asc > ios/IOS_DISTRIBUTION_CERTIFICATE.p12
@@ -64,11 +58,9 @@ jobs:
 
           ls -la ios
 
-          CERTIFICATE_PATH2="$pwd/IOS_DISTRIBUTION_CERTIFICATE.p12"
+          CERTIFICATE_PATH2=`pwd`/IOS_DISTRIBUTION_CERTIFICATE.p12
           echo "$CERTIFICATE_PATH2"
           
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          echo "$CERTIFICATE_PATH"
 
       - name: Install Flutter dependencies
         run: flutter pub get
