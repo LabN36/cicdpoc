@@ -80,7 +80,7 @@ jobs:
 
       - name: Build IPA
         working-directory: ./ios
-        run: flutter build ipa -v --export-options-plist=`pwd`/ios/exportOptions.plist
+        run: flutter build ipa -v --export-options-plist=`pwd`/exportOptions.plist
 
     #   - name: Run Fastlane
     #     working-directory: ./android
