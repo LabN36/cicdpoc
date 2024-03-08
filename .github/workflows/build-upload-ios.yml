@@ -20,29 +20,29 @@ jobs:
       
 
 
-      - name: Setup Flutter
-        if: steps.flutterCache.outputs.cache-hit != 'true'
-        uses: subosito/flutter-action@v1
-        with:
-          flutter-version: 3.7.12
+      # - name: Setup Flutter
+      #   if: steps.flutterCache.outputs.cache-hit != 'true'
+      #   uses: subosito/flutter-action@v1
+      #   with:
+      #     flutter-version: 3.7.12
         
-      - name: Setup Ruby
-        if: steps.flutterCache.outputs.cache-hit != 'true'
-        uses: ruby/setup-ruby@v1
-        with:
-            ruby-version: '3.0'
-            bundler-cache: true
+      # - name: Setup Ruby
+      #   if: steps.flutterCache.outputs.cache-hit != 'true'
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #       ruby-version: '3.0'
+      #       bundler-cache: true
 
-      - name: Setup Java
-        if: steps.flutterCache.outputs.cache-hit != 'true'
-        uses: actions/setup-java@v1
-        with:
-            java-version: 11
+      # - name: Setup Java
+      #   if: steps.flutterCache.outputs.cache-hit != 'true'
+      #   uses: actions/setup-java@v1
+      #   with:
+      #       java-version: 11
     
-      - name: Check xcodebuild Version
-        run: |
-            which xcodebuild
-            xcodebuild -version
+      # - name: Check xcodebuild Version
+      #   run: |
+      #       which xcodebuild
+      #       xcodebuild -version
 
       - uses: actions/checkout@v3
       - name: Checkout Source Code
@@ -75,33 +75,18 @@ jobs:
 
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Install Flutter dependencies
-        run: flutter pub get
+      # - name: Install Flutter dependencies
+      #   run: flutter pub get
 
-      - name: Build IPA
-        working-directory: ./ios
-        run: |
-          EXPORT_OPTION=`pwd`/exportOptions.plist
-          echo "$EXPORT_OPTION"
-          pwd
-          ls -la
-          cat /Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
-          flutter build ipa --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
+      # - name: Build IPA
+      #   working-directory: ./ios
+      #   run: |
+      #     EXPORT_OPTION=`pwd`/exportOptions.plist
+      #     echo "$EXPORT_OPTION"
+      #     flutter build ipa --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
 
-    #   - name: Run Fastlane
-    #     working-directory: ./android
-    #     env:
-    #       flavor: ${{ inputs.flavor }}
-    #       build_name: ${{ inputs.build_name }}
-    #       build_number: ${{ inputs.build_number }}
-    #       build_type: ${{ inputs.build_type }}
-    #       fad_upload: ${{ inputs.fad_upload }}
-    #       playstore_upload: ${{ inputs.playstore_upload }}
-    #     run: bundle exec fastlane fad flavor:"$flavor" build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"$fad_upload" playstore_upload:"$playstore_upload"
-
-    #   - uses: actions/upload-artifact@v4
-    #     if: ${{ inputs.artifact_upload }}
-    #     with:
-    #        name: android-build
-    #        path: |
-    #         build/app/outputs/apk/
+      - uses: actions/upload-artifact@v4
+        with:
+           name: android-build
+           path: |
+            ios/
