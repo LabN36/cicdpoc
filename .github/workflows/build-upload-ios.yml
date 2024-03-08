@@ -59,7 +59,7 @@ jobs:
           ls -la ios
 
           CERTIFICATE_PATH=`pwd`/ios/IOS_DISTRIBUTION_CERTIFICATE.p12
-          PP_PATH=`pwd`/ios/build_pp.mobileprovision
+          PP_PATH=`pwd`/ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
           KEYCHAIN_PATH=`pwd`/ios/app-signing.keychain-db
 
           echo "$CERTIFICATE_PATH"
@@ -80,7 +80,7 @@ jobs:
 
       - name: Build IPA
         working-directory: ./ios
-        run: flutter build ipa -v
+        run: flutter build ipa -v --export-options-plist=`pwd`/ios/exportOptions.plist
 
     #   - name: Run Fastlane
     #     working-directory: ./android

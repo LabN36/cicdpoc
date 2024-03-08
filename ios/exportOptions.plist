@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>destination</key>
+	<string>export</string>
+	<key>manageAppVersionAndBuildNumber</key>
+	<true/>
+	<key>method</key>
+	<string>app-store</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.themobitech.cicdpoc</key>
+		<string>cicd_poc_distribution</string>
+	</dict>
+	<key>signingCertificate</key>
+	<string>2550FE3C2D5D0310BD462B074B7E25E82F60048D</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>stripSwiftSymbols</key>
+	<true/>
+	<key>teamID</key>
+	<string>NHWJF942MJ</string>
+	<key>uploadSymbols</key>
+	<true/>
+</dict>
+</plist>
