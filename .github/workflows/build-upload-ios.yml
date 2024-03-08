@@ -20,29 +20,29 @@ jobs:
       
 
 
-      # - name: Setup Flutter
-      #   if: steps.flutterCache.outputs.cache-hit != 'true'
-      #   uses: subosito/flutter-action@v1
-      #   with:
-      #     flutter-version: 3.7.12
+      - name: Setup Flutter
+        if: steps.flutterCache.outputs.cache-hit != 'true'
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: 3.7.12
         
-      # - name: Setup Ruby
-      #   if: steps.flutterCache.outputs.cache-hit != 'true'
-      #   uses: ruby/setup-ruby@v1
-      #   with:
-      #       ruby-version: '3.0'
-      #       bundler-cache: true
+      - name: Setup Ruby
+        if: steps.flutterCache.outputs.cache-hit != 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: '3.0'
+            bundler-cache: true
 
-      # - name: Setup Java
-      #   if: steps.flutterCache.outputs.cache-hit != 'true'
-      #   uses: actions/setup-java@v1
-      #   with:
-      #       java-version: 11
+      - name: Setup Java
+        if: steps.flutterCache.outputs.cache-hit != 'true'
+        uses: actions/setup-java@v1
+        with:
+            java-version: 11
     
-      # - name: Check xcodebuild Version
-      #   run: |
-      #       which xcodebuild
-      #       xcodebuild -version
+      - name: Check xcodebuild Version
+        run: |
+            which xcodebuild
+            xcodebuild -version
 
       - uses: actions/checkout@v3
       - name: Checkout Source Code
@@ -57,9 +57,9 @@ jobs:
           gpg -d --passphrase $IOS_ENCRYION_PASSPHRASE --batch ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
 
 
-          CERTIFICATE_PATH=`pwd`/ios/IOS_DISTRIBUTION_CERTIFICATE.p12
-          PP_PATH=`pwd`/ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
-          KEYCHAIN_PATH=`pwd`/ios/app-signing.keychain-db
+          CERTIFICATE_PATH=$RUNNER_TEMP/IOS_DISTRIBUTION_CERTIFICATE.p12
+          PP_PATH=$RUNNER_TEMP/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           echo "$CERTIFICATE_PATH"
 
@@ -75,18 +75,18 @@ jobs:
 
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles
 
-      # - name: Install Flutter dependencies
-      #   run: flutter pub get
+      - name: Install Flutter dependencies
+        run: flutter pub get
 
-      # - name: Build IPA
-      #   working-directory: ./ios
-      #   run: |
-      #     EXPORT_OPTION=`pwd`/exportOptions.plist
-      #     echo "$EXPORT_OPTION"
-      #     flutter build ipa --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
+      - name: Build IPA
+        working-directory: ./ios
+        run: |
+          EXPORT_OPTION=`pwd`/exportOptions.plist
+          echo "$EXPORT_OPTION"
+          flutter build ipa --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
 
-      - uses: actions/upload-artifact@v4
-        with:
-           name: android-build
-           path: |
-            ios/
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #      name: android-build
+      #      path: |
+      #       ios/
