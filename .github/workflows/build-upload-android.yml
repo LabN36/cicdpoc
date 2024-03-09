@@ -84,7 +84,7 @@ jobs:
         env:
           ANDROID_KEY_DOT_PROPERTIES_FILE: ${{ secrets.ANDROID_KEY_DOT_PROPERTIES_FILE }}
           ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
-          PASSPHRASE: ${{ secrets.PASSPHRASE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           SERVICECREDENTIALFILE: ${{ secrets.SERVICECREDENTIALFILE }}
           PLAYSERVICEFILE: ${{ secrets.PLAYSERVICEFILE }}
         run: |
@@ -93,10 +93,10 @@ jobs:
           echo "$ANDROID_KEYSTORE_FILE" > android/keystorefile.jks.asc
           echo "$SERVICECREDENTIALFILE" > android/firebaseadmin.json.asc
           echo "$PLAYSERVICEFILE" > android/playserviceaccount.json.asc
-          gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
-          gpg -d --passphrase $PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
-          gpg -d --passphrase $PASSPHRASE --batch android/firebaseadmin.json.asc > android/firebaseadmin.json
-          gpg -d --passphrase $PASSPHRASE --batch android/playserviceaccount.json.asc > android/playserviceaccount.json
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/key.properties.asc > android/key.properties
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/firebaseadmin.json.asc > android/firebaseadmin.json
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/playserviceaccount.json.asc > android/playserviceaccount.json
 
       - name: Install Flutter dependencies
         run: flutter pub get
