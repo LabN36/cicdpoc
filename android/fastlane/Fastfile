@@ -21,13 +21,13 @@ platform :android do
     playstore_upload = options[:playstore_upload]
     puts "Selected playstore_upload = #{playstore_upload}"
     
-    if flavor == "dev"
+    if flavor == "Dev"
       package_name = 'com.themobitech.cicdpoc'
       firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
-    elsif flavor == "preprod"
+    elsif flavor == "PreProd"
       package_name = 'com.themobitech.cicdpoc'
       firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
-    elsif flavor == "prod"
+    elsif flavor == "Prod"
       package_name = 'com.themobitech.cicdpoc'
       firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
     end
