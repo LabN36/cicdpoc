@@ -85,8 +85,8 @@ jobs:
           echo "$EXPORT_OPTION"
           flutter build ipa --export-options-plist=/Users/runner/work/cicdpoc/cicdpoc/ios/exportOptions.plist
 
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #      name: android-build
-      #      path: |
-      #       ios/
+      - uses: actions/upload-artifact@v4
+        with:
+           name: ios-build
+           path: |
+            /build/ios/
