@@ -1,8 +1,12 @@
 name: IOS Deployment
 on:
-    push:
-      branches:
-        - main
+  workflow_dispatch:
+    inputs:
+      artifact_upload:
+        description: 'Upload to Artifact'
+        required: false
+        type: boolean
+
 jobs:
   build_android:
     name: Building IOS 
