@@ -1,0 +1,127 @@
+name: Android Build
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        type: choice
+        required: true
+        description: Flavor
+        options:
+        - Dev
+        - PreProd
+        - Prod
+      build_type:
+        type: choice
+        required: true
+        description: Build Type(use release for production deployment otherwise always debug)
+        options:
+        - release
+        - debug    
+      build_name:
+        type: string
+        required: true
+        description: Build Name(name of the build like 1.0.0, 1.0.1, if you are QA write like 1.0.0-QA for tracking purpose)
+      build_number:
+        type: string
+        required: true
+        description: Build Number(an incremental number like 1,2,3, check previous otherwise you'll get exception)
+      fad_upload:
+        description: 'Upload to Firebase App Distrbutn'
+        required: false
+        type: boolean
+      playstore_upload:
+        description: 'Upload to Google Play Store(only if release build_type)'
+        required: false
+        type: boolean
+      artifact_upload:
+        description: 'Upload to Github Artifact'
+        required: false
+        type: boolean
+
+jobs:
+  build_android:
+    name: Building Android 
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Cache Flutter
+        id: flutterCache
+        uses: actions/cache@v3
+        with:
+          path: /opt/
+          key: ${{ runner.OS }}-fllutter-cache-1
+          # restore-keys: |
+          #   ${{ runner.OS }}-flutter-cache
+      
+
+
+      - name: Setup Flutter
+        if: steps.flutterCache.outputs.cache-hit != 'true'
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: 3.7.12
+        
+      - name: Setup Ruby
+        if: steps.flutterCache.outputs.cache-hit != 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: '3.0'
+            bundler-cache: true
+
+      - name: Setup Java
+        if: steps.flutterCache.outputs.cache-hit != 'true'
+        uses: actions/setup-java@v1
+        with:
+            java-version: 11
+    
+      # - name: Check JAVA Version
+      #   run: |
+      #       which java
+      #       which flutter
+      #       which ruby
+      #       echo $JAVA_HOME
+
+      - uses: actions/checkout@v3
+      - name: Checkout Source Code
+        env:
+          ANDROID_KEY_DOT_PROPERTIES_FILE: ${{ secrets.ANDROID_KEY_DOT_PROPERTIES_FILE }}
+          ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE: ${{ env.ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE }}
+          ANDROID_PLAY_STORE_SERVICE_ACCOUNT_CREDENTIAL_FILE: ${{ secrets.ANDROID_PLAY_STORE_SERVICE_ACCOUNT_CREDENTIAL_FILE }}
+        run: |
+          export ARTIFACT_NAME="android-file-$(date +'%Y-%m-%dT-%H-%M')"
+          echo "$ANDROID_KEY_DOT_PROPERTIES_FILE" > android/key.properties.asc
+          echo "$ANDROID_KEYSTORE_FILE" > android/keystorefile.jks.asc
+          echo "$ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE" > android/firebase_service_account_credentials_file.json.asc
+          echo "$ANDROID_PLAY_STORE_SERVICE_ACCOUNT_CREDENTIAL_FILE" > android/play_store_service_account.json.asc
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/key.properties.asc > android/key.properties
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/keystorefile.jks.asc > android/keystorefile.jks
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/firebase_service_account_credentials_file.json.asc > android/firebase_service_account_credentials_file.json
+          gpg -d --passphrase $GPG_PASSPHRASE --batch android/play_store_service_account.json.asc > android/play_store_service_account.json
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Setup Fastlane
+        working-directory: ./android
+        run: bundle install
+
+      - name: Run Fastlane
+        working-directory: ./android
+        env:
+          flavor: ${{ inputs.flavor }}
+          build_name: ${{ inputs.build_name }}
+          build_number: ${{ inputs.build_number }}
+          build_type: ${{ inputs.build_type }}
+          fad_upload: ${{ inputs.fad_upload }}
+          playstore_upload: ${{ inputs.playstore_upload }}
+        run: bundle exec fastlane fad flavor:"$flavor" build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"$fad_upload" playstore_upload:"$playstore_upload"
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.artifact_upload }}
+        with:
+           name: android-build
+           path: |
+            build/app/outputs/apk/
+            build/app/outputs/bundle/
