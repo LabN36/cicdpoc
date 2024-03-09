@@ -89,4 +89,4 @@ jobs:
         with:
            name: ios-build
            path: |
-            /build/ios/
+            build/ios/
