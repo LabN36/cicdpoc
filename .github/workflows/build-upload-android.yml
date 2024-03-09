@@ -83,14 +83,14 @@ jobs:
       - name: Checkout Source Code
         env:
           ANDROID_KEY_DOT_PROPERTIES_FILE: ${{ secrets.ANDROID_KEY_DOT_PROPERTIES_FILE }}
-          STOREFILE: ${{ secrets.STOREFILE }}
+          ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
           SERVICECREDENTIALFILE: ${{ secrets.SERVICECREDENTIALFILE }}
           PLAYSERVICEFILE: ${{ secrets.PLAYSERVICEFILE }}
         run: |
           export ARTIFACT_NAME="android-file-$(date +'%Y-%m-%dT-%H-%M')"
           echo "$ANDROID_KEY_DOT_PROPERTIES_FILE" > android/key.properties.asc
-          echo "$STOREFILE" > android/keystorefile.jks.asc
+          echo "$ANDROID_KEYSTORE_FILE" > android/keystorefile.jks.asc
           echo "$SERVICECREDENTIALFILE" > android/firebaseadmin.json.asc
           echo "$PLAYSERVICEFILE" > android/playserviceaccount.json.asc
           gpg -d --passphrase $PASSPHRASE --batch android/key.properties.asc > android/key.properties
