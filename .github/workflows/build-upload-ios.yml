@@ -53,12 +53,12 @@ jobs:
         env:
           IOS_DISTRIBUTION_CERTIFICATE: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE }}
           IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION: ${{ secrets.IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION }}
-          IOS_ENCRYION_PASSPHRASE: ${{ secrets.IOS_ENCRYION_PASSPHRASE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           echo "$IOS_DISTRIBUTION_CERTIFICATE" > ios/IOS_DISTRIBUTION_CERTIFICATE.asc
           echo "$IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION" > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc
-          gpg -d --passphrase $IOS_ENCRYION_PASSPHRASE --batch ios/IOS_DISTRIBUTION_CERTIFICATE.asc > ios/IOS_DISTRIBUTION_CERTIFICATE.p12
-          gpg -d --passphrase $IOS_ENCRYION_PASSPHRASE --batch ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
+          gpg -d --passphrase $GPG_PASSPHRASE --batch ios/IOS_DISTRIBUTION_CERTIFICATE.asc > ios/IOS_DISTRIBUTION_CERTIFICATE.p12
+          gpg -d --passphrase $GPG_PASSPHRASE --batch ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.asc > ios/IOS_CICD_POC_DISTRIBUTIONMOBILEPROVISION.mobileprovision
 
 
           CERTIFICATE_PATH=`pwd`/ios/IOS_DISTRIBUTION_CERTIFICATE.p12
@@ -67,11 +67,11 @@ jobs:
 
           echo "$CERTIFICATE_PATH"
 
-          security create-keychain -p "$IOS_ENCRYION_PASSPHRASE" $KEYCHAIN_PATH
+          security create-keychain -p "$GPG_PASSPHRASE" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$IOS_ENCRYION_PASSPHRASE" $KEYCHAIN_PATH
+          security unlock-keychain -p "$GPG_PASSPHRASE" $KEYCHAIN_PATH
 
-          security import $CERTIFICATE_PATH -P "$IOS_ENCRYION_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security import $CERTIFICATE_PATH -P "$GPG_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
