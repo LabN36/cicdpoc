@@ -30,12 +30,12 @@ platform :android do
     puts 'Selected playstore_upload = #{playstore_upload}'
 
     build_android_app(
-      task: 'clean assemble',
-      build_type: 'release',
+      task: "clean assemble",
+      build_type: "#{build_type}",
       print_command: true,
       properties: {
-        'android.injected.version.code' => '#{build_number}',
-        'android.injected.version.name' => '#{build_name}',
+        "android.injected.version.code" => "#{build_number}",
+        "android.injected.version.name" => "#{build_name}",
       }
     )
     if(fad_upload)
