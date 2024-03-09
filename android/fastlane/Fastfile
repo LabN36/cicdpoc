@@ -45,7 +45,7 @@ platform :android do
         # release_notes_file: 'fastlane/release_notes.txt',
         service_credentials_file:	'../android/firebaseadmin.json',
         android_artifact_type: 'APK',
-        android_artifact_path: '../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk',
+        android_artifact_path: "../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk",
         debug: true
       )
     end
