@@ -42,6 +42,7 @@ jobs:
   build_android:
     name: Building Android 
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.flavor }}
     steps:
 
       - name: Cache Flutter
@@ -87,10 +88,9 @@ jobs:
           ANDROID_KEY_DOT_PROPERTIES_FILE: ${{ secrets.ANDROID_KEY_DOT_PROPERTIES_FILE }}
           ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE: ${{ env.ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE }}
+          ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE: ${{ secrets.ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE }}
           ANDROID_PLAY_STORE_SERVICE_ACCOUNT_CREDENTIAL_FILE: ${{ secrets.ANDROID_PLAY_STORE_SERVICE_ACCOUNT_CREDENTIAL_FILE }}
         run: |
-          export ARTIFACT_NAME="android-file-$(date +'%Y-%m-%dT-%H-%M')"
           echo "$ANDROID_KEY_DOT_PROPERTIES_FILE" > android/key.properties.asc
           echo "$ANDROID_KEYSTORE_FILE" > android/keystorefile.jks.asc
           echo "$ANDROID_FIREBASE_SERVICE_ACCOUNT_CREDENTIAL_FILE" > android/firebase_service_account_credentials_file.json.asc
