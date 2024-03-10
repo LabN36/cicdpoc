@@ -116,7 +116,7 @@ jobs:
           build_type: ${{ inputs.build_type }}
           fad_upload: ${{ inputs.fad_upload }}
           playstore_upload: ${{ inputs.playstore_upload }}
-        run: bundle exec fastlane fad flavor:"$flavor" build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"$fad_upload" playstore_upload:"$playstore_upload"
+        run: bundle exec fastlane ship flavor:"$flavor" build_name:"$build_name" build_number:"$build_number" build_type:"$build_type" fad_upload:"$fad_upload" playstore_upload:"$playstore_upload"
 
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.artifact_upload }}

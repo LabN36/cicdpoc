@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +40,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<String> getFlavor() async {
+    // var flavor = Environments.prod.name;
+    try {
+      final flavor =
+          await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+      return flavor!;
+    } on PlatformException catch (e) {
+      log('[getFlavorSettings]', error: e);
+      throw Exception(e);
+    } on MissingPluginException catch (e) {
+      log('[getFlavorSettings]', error: e);
+      throw Exception(e);
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            FutureBuilder(
+              future: getFlavor(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text('Flavor ${snapshot.data}');
+                }
+                return const Text('Fetching Flavor');
+              },
+            )
           ],
         ),
       ),

@@ -5,21 +5,37 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "cicd",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "cicd (profile mode)",
+            "name": "cicd dev",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "dev"
+            ],
+            "program": "lib/main.dart"
         },
         {
-            "name": "cicd (release mode)",
+            "name": "cicd preProd",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "preProd"
+            ],
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "cicd Prod",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "prod"
+            ],
+            "program": "lib/main.dart"
         }
     ]
 }

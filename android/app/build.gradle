@@ -53,6 +53,23 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            applicationId "com.themobitech.cicdpoc.dev"
+            dimension "app"
+        }
+        preProd {
+            applicationId "com.themobitech.cicdpoc.preprod"
+            dimension "app"
+        }
+        prod {
+            applicationId "com.themobitech.cicdpoc"
+            dimension "app"
+        }
+    }
     signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
@@ -63,7 +80,7 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            productFlavors.prod.signingConfig signingConfigs.release
         }
     }
 }

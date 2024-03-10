@@ -7,7 +7,7 @@ platform :android do
   end
 
   desc 'Submit a new Android Build to FAD'
-  lane :fad do |options|
+  lane :ship do |options|
     flavor = options[:flavor]
     puts "Selected flavors = #{flavor}"
     build_type = options[:build_type]
@@ -20,21 +20,21 @@ platform :android do
     puts "Selected fad_upload = #{fad_upload}"
     playstore_upload = options[:playstore_upload]
     puts "Selected playstore_upload = #{playstore_upload}"
-    
+    # default for prod
+    package_name = 'com.themobitech.cicdpoc'
+    firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
     if flavor == "Dev"
       package_name = 'com.themobitech.cicdpoc'
       firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
     elsif flavor == "PreProd"
       package_name = 'com.themobitech.cicdpoc'
       firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
-    elsif flavor == "Prod"
-      package_name = 'com.themobitech.cicdpoc'
-      firebase_app_id = '1:561779125994:android:844b58a3f389dca841f193'
     end
     puts "package_name #{package_name}"
+    puts "firebase_app_id #{firebase_app_id}"
     if (playstore_upload)
-      puts "Generating Bundle File for Play Store"
-      task = "clean bundle"
+      task = "clean bundle#{flavor}"
+      puts "Generating Bundle File for Play Store Task #{task}"
       build_android_app(
         task: "#{task}",
         build_type: "#{build_type}",
@@ -51,13 +51,13 @@ platform :android do
         skip_upload_metadata: true,
         skip_upload_images: true,
         skip_upload_changelogs: true,
-        aab: "../build/app/outputs/bundle/#{build_type}/app-#{build_type}.aab",
+        aab: "../build/app/outputs/bundle/#{flavor}#{build_type}/app-#{flavor}-#{build_type}.aab",
         json_key: './play_store_service_account.json',
       )
     end
     if (fad_upload)
-      puts "Generating APK File for FAD"
-      task = "assemble"
+      task = "assemble#{flavor}"
+      puts "Generating APK File for FAD Task #{task}"
       build_android_app(
         task: "#{task}",
         build_type: "#{build_type}",
@@ -73,9 +73,9 @@ platform :android do
         # release_notes_file: 'fastlane/release_notes.txt',
         service_credentials_file:	'../android/firebase_service_account_credentials_file.json',
         android_artifact_type: 'APK',
-        android_artifact_path: "../build/app/outputs/apk/#{build_type}/app-#{build_type}.apk",
+        android_artifact_path: "../build/app/outputs/apk/#{flavor}/#{build_type}/app-#{flavor}-#{build_type}.apk",
         debug: true
-      )      
+      )
     end
   end
 end
